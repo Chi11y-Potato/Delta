@@ -1,1 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Company Name</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f4fb;--ink:#161a3a;--mute:#555b80;--line:#aab3dd;--panel:#e4e9f7;--a:#3b4cca;--b:#e0457b;--bgrgb:241,244,251;
+--fd:"Bricolage Grotesque",system-ui,sans-serif;--fb:"DM Sans",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1330;--ink:#eef0ff;--mute:#a4abd6;--line:#3a4378;--panel:#181d45;--a:#8fa8ff;--b:#ff9ec4;--bgrgb:15,19,48}}
+:root[data-theme="dark"]{--bg:#0f1330;--ink:#eef0ff;--mute:#a4abd6;--line:#3a4378;--panel:#181d45;--a:#8fa8ff;--b:#ff9ec4;--bgrgb:15,19,48}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font:400 1.05rem/1.6 var(--fb);overflow:hidden;transition:background .4s,color .4s}
+body::before{content:"";position:fixed;inset:0;z-index:0;opacity:.16;pointer-events:none;background:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:44px 44px}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+header{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:12px;
+padding:calc(14px + env(safe-area-inset-top,0px)) 20px 14px}
+.brand{font:800 1.15rem var(--fd);letter-spacing:-.01em}
+.ctl{display:flex;gap:8px;align-items:center}
+button{font:inherit;color:inherit;background:none;border:1.5px solid var(--line);border-radius:99px;padding:6px 12px;cursor:pointer;transition:background .2s,border-color .2s}
+button:hover{border-color:var(--a)}
+button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,a:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+main{position:fixed;inset:0;z-index:1;overflow:hidden}
+#deck{display:flex;flex-direction:column;width:100%;height:100%;transition:transform .9s cubic-bezier(.7,0,.2,1)}
+.slide{position:relative;flex:0 0 100%;height:100%;overflow-y:auto;overscroll-behavior:contain;padding:calc(84px + env(safe-area-inset-top,0px)) max(8vw,64px) calc(40px + env(safe-area-inset-bottom,0px)) 8vw;display:flex;align-items:center}
+.in{position:relative;z-index:1;width:100%;max-width:1080px;margin:0 auto}
+h1{font:800 clamp(3rem,10vw,8rem)/.92 var(--fd);letter-spacing:-.04em;max-width:11ch}
+h2{font:800 clamp(2rem,5vw,3.6rem)/1 var(--fd);letter-spacing:-.03em;margin-bottom:1.2rem}
+h3{font:500 1.25rem var(--fd);margin-bottom:.4rem}
+p{max-width:60ch;color:var(--mute)}
+.lead{margin:1.6rem 0 2rem;font-size:1.2rem}
+.cta{display:inline-block;background:var(--ink);color:var(--bg);text-decoration:none;border-radius:99px;padding:14px 28px;font-weight:500}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,64px);align-items:center}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.ph{aspect-ratio:4/3;border:1.5px solid var(--line);border-radius:18px 4px 18px 4px;
+background:linear-gradient(to top right,transparent calc(50% - 1px),var(--line) 50%,transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),var(--line) 50%,transparent calc(50% + 1px)),var(--panel)}
+.svc{border-top:3px solid var(--a);padding-top:14px}
+.svc:nth-child(2){border-color:var(--b)}
+.gal{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.gal .ph:nth-child(2){border-radius:4px 18px 4px 18px}
+.big{display:block;font:800 clamp(1.6rem,5vw,3.4rem)/1.15 var(--fd);letter-spacing:-.02em;color:var(--ink);text-decoration:none;word-break:break-word}
+.big:hover{color:var(--a)}
+.lab{color:var(--mute);margin:1.6rem 0 .2rem}
+nav{position:fixed;z-index:5;right:calc(10px + env(safe-area-inset-right,0px));top:50%;translate:0 -50%;display:flex;flex-direction:column;align-items:center;gap:14px}
+.dots{display:flex;flex-direction:column;gap:10px;align-items:center}
+.dots button{width:14px;height:14px;padding:0;border-radius:50%}
+.dots button[aria-current="true"]{height:38px;background:var(--b);border-color:var(--b)}
+.arr{width:40px;height:40px;padding:0;font-size:1.1rem}
+.arr[disabled]{opacity:.3;cursor:default}
+@media (max-width:760px){.cols,.grid3,.gal{grid-template-columns:1fr}.slide{align-items:flex-start}.brand{font-size:1rem}}
+@media (prefers-reduced-motion:reduce){#deck{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
 
+<header>
+  <div class="brand">Company Name</div>
+  <div class="ctl">
+    <div class="ctl" role="group" aria-label="Language" id="langs">
+      <button data-l="en">EN</button><button data-l="de">DE</button><button data-l="es">ES</button>
+    </div>
+    <button id="theme" aria-label="Toggle dark / light mode">◐</button>
+  </div>
+</header>
+
+<main>
+<div id="deck">
+  <section class="slide"><div class="in">
+    <h1 data-t="h1">Ideas in motion</h1>
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+    <a class="cta" href="#" data-go="4" data-t="cta">Get in touch</a>
+  </div></section>
+
+  <section class="slide"><div class="in cols">
+    <div>
+      <h2 data-t="about">About us</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+    </div>
+    <div class="ph" role="img" aria-label="Placeholder picture"></div>
+  </div></section>
+
+  <section class="slide"><div class="in">
+    <h2 data-t="services">Services</h2>
+    <div class="grid3">
+      <div class="svc"><h3 data-t="s1">Strategy</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do.</p></div>
+      <div class="svc"><h3 data-t="s2">Design</h3><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p></div>
+      <div class="svc"><h3 data-t="s3">Delivery</h3><p>Duis aute irure dolor in reprehenderit in voluptate velit.</p></div>
+    </div>
+  </div></section>
+
+  <section class="slide"><div class="in">
+    <h2 data-t="gallery">Gallery</h2>
+    <div class="gal">
+      <div class="ph" role="img" aria-label="Placeholder picture 1"></div>
+      <div class="ph" role="img" aria-label="Placeholder picture 2"></div>
+      <div class="ph" role="img" aria-label="Placeholder picture 3"></div>
+    </div>
+  </div></section>
+
+  <section class="slide"><div class="in">
+    <h2 data-t="contact">Contact</h2>
+    <p class="lab" data-t="phone">Phone</p>
+    <a class="big" href="tel:+15550000000">+1 (555) 000-0000</a>
+    <p class="lab" data-t="email">Email</p>
+    <a class="big" href="mailto:hello@company.com">hello@company.com</a>
+  </div></section>
+</div>
+</main>
+
+<nav>
+  <button class="arr" id="prev" aria-label="Previous slide">↑</button>
+  <div class="dots" id="dots"></div>
+  <button class="arr" id="next" aria-label="Next slide">↓</button>
+</nav>
+
+<script>
+const T={
+en:{h1:"Ideas in motion",cta:"Get in touch",about:"About us",services:"Services",s1:"Strategy",s2:"Design",s3:"Delivery",gallery:"Gallery",contact:"Contact",phone:"Phone",email:"Email",n:["Home","About us","Services","Gallery","Contact"]},
+de:{h1:"Ideen in Bewegung",cta:"Kontakt aufnehmen",about:"Über uns",services:"Leistungen",s1:"Strategie",s2:"Design",s3:"Umsetzung",gallery:"Galerie",contact:"Kontakt",phone:"Telefon",email:"E-Mail",n:["Start","Über uns","Leistungen","Galerie","Kontakt"]},
+es:{h1:"Ideas en movimiento",cta:"Contáctanos",about:"Nosotros",services:"Servicios",s1:"Estrategia",s2:"Diseño",s3:"Entrega",gallery:"Galería",contact:"Contacto",phone:"Teléfono",email:"Correo",n:["Inicio","Nosotros","Servicios","Galería","Contacto"]}};
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const slides=$$('.slide'), deck=$('#deck'), dots=$('#dots'), root=document.documentElement;
+let cur=0, lang=store.get('lang'); if(!T[lang]) lang=(navigator.language||'en').slice(0,2); if(!T[lang]) lang='en';
+
+slides.forEach((_,i)=>{const b=document.createElement('button');b.onclick=()=>go(i);dots.appendChild(b)});
+
+function setLang(l){
+  lang=l; store.set('lang',l); root.lang=l;
+  $$('[data-t]').forEach(e=>e.textContent=T[l][e.dataset.t]);
+  $$('#dots button').forEach((b,i)=>b.setAttribute('aria-label',T[l].n[i]));
+  $$('#langs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l));
+}
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  deck.style.transform=`translateY(${-cur*100}%)`;
+  slides.forEach((s,k)=>{s.inert=k!==cur;s.classList.toggle('on',k===cur);s.setAttribute('aria-hidden',k!==cur)});
+  $$('#dots button').forEach((b,k)=>b.setAttribute('aria-current',k===cur));
+  stage(cur);$('#prev').disabled=cur===0; $('#next').disabled=cur===slides.length-1;
+}
+$$('#langs button').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+$('#prev').onclick=()=>go(cur-1); $('#next').onclick=()=>go(cur+1);
+$$('[data-go]').forEach(a=>a.onclick=e=>{e.preventDefault();go(+a.dataset.go)});
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown')go(cur+1);
+  else if(e.key==='ArrowUp'||e.key==='PageUp')go(cur-1);
+  else if(e.key==='Home')go(0); else if(e.key==='End')go(slides.length-1);
+});
+let lock=0;
+addEventListener('wheel',e=>{
+  if(Date.now()<lock||Math.abs(e.deltaY)+Math.abs(e.deltaX)<30)return;
+  if(Math.abs(e.deltaX)>Math.abs(e.deltaY))return; const sl=e.target.closest('.slide'); if(sl&&sl.scrollHeight>sl.clientHeight+4&&((e.deltaY>0&&sl.scrollTop+sl.clientHeight<sl.scrollHeight-4)||(e.deltaY<0&&sl.scrollTop>4)))return;
+  lock=Date.now()+800; go(cur+(e.deltaY>0?1:-1));
+},{passive:true});
+let tx=null,ty=0,et=true,eb=true;
+addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;const sl=e.target.closest('.slide');et=!sl||sl.scrollTop<=4;eb=!sl||sl.scrollTop+sl.clientHeight>=sl.scrollHeight-4},{passive:true});
+addEventListener('touchend',e=>{
+  if(tx===null)return; const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty; tx=null;
+  if(Math.abs(dy)>50&&Math.abs(dy)>Math.abs(dx)*1.5&&(dy<0?eb:et)) go(cur+(dy<0?1:-1));
+},{passive:true});
+
+/* theme */
+function isDark(){const t=root.dataset.theme; return t?t==='dark':matchMedia('(prefers-color-scheme:dark)').matches}
+function setTheme(t){root.dataset.theme=t;store.set('theme',t)}
+const saved=store.get('theme'); if(saved) root.dataset.theme=saved;
+$('#theme').onclick=()=>setTheme(isDark()?'light':'dark');
+
+/* neural network background: signals travel layer to layer, a new forward pass fires on every slide */
+let stage=()=>{};
+(function(){
+const cv=$('#bg'),cx=cv.getContext('2d'),still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const cs=n=>getComputedStyle(root).getPropertyValue(n).trim();
+let W,H,L,N=[],E=[],In=[],Pu=[],col={},t=0,hl=0,px=-999,py=-999,last=performance.now();
+const theme=()=>{col={a:cs('--a'),b:cs('--b'),l:cs('--line'),bg:cs('--bg')};if(still)draw(0)};
+const fire=e=>{if(e&&Pu.length<160)Pu.push({e,p:0,v:.5+Math.random()*.4})};
+function build(){
+  const d=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0);
+  const S=W<760?[3,6,6,3]:[4,7,9,9,7,3];L=S.length;N=[];E=[];Pu=[];
+  S.forEach((n,li)=>{for(let j=0;j<n;j++)N.push({li,j,n,out:[],act:0,ph:Math.random()*6.28,x:0,y:0})});
+  N.forEach(a=>N.forEach(b=>{if(b.li===a.li+1){const e={a,b};E.push(e);a.out.push(e)}}));
+  In=N.filter(n=>n.li===0);
+  if(still)draw(0);
+}
+function draw(dt){
+  cx.clearRect(0,0,W,H);
+  const m=W*.06;
+  N.forEach(n=>{n.x=m+n.li*(W-2*m)/(L-1)+Math.sin(t*.5+n.ph)*7;n.y=H*.12+(n.j+.5)/n.n*H*.76+Math.cos(t*.4+n.ph)*7});
+  cx.globalAlpha=.3;cx.strokeStyle=col.l;cx.lineWidth=1;cx.beginPath();E.forEach(e=>{cx.moveTo(e.a.x,e.a.y);cx.lineTo(e.b.x,e.b.y)});cx.stroke();
+  if(!still&&Pu.length<60&&Math.random()<dt*8){const n=In[Math.random()*In.length|0];n.act=1;fire(n.out[Math.random()*n.out.length|0])}
+  cx.lineCap='round';cx.strokeStyle=col.b;cx.lineWidth=2.4;cx.globalAlpha=.9;
+  for(let i=Pu.length-1;i>=0;i--){
+    const q=Pu[i],e=q.e;q.p+=dt*q.v;
+    if(q.p>=1){e.b.act=1;for(let k=0;k<2;k++)if(Math.random()<.6)fire(e.b.out[Math.random()*e.b.out.length|0]);Pu.splice(i,1);continue}
+    const q0=Math.max(0,q.p-.14),dx=e.b.x-e.a.x,dy=e.b.y-e.a.y;
+    cx.beginPath();cx.moveTo(e.a.x+dx*q0,e.a.y+dy*q0);cx.lineTo(e.a.x+dx*q.p,e.a.y+dy*q.p);cx.stroke();
+  }
+  N.forEach(n=>{
+    const dd=Math.hypot(n.x-px,n.y-py);
+    if(dd<150){n.act=Math.max(n.act,(1-dd/150)*.9);if(!still&&Math.random()<.03)fire(n.out[Math.random()*n.out.length|0])}
+    n.act*=Math.exp(-dt*2.2);
+    if(n.act>.02){cx.globalAlpha=n.act*.3;cx.fillStyle=col.b;cx.beginPath();cx.arc(n.x,n.y,6+n.act*14,0,6.283);cx.fill()}
+    const on=n.li===hl;
+    cx.globalAlpha=1;cx.fillStyle=n.act>.15?col.b:col.bg;cx.strokeStyle=on?col.b:col.a;cx.lineWidth=on?2.5:1.6;
+    cx.beginPath();cx.arc(n.x,n.y,4.5,0,6.283);cx.fill();cx.stroke();
+  });
+}
+function tick(now){requestAnimationFrame(tick);const dt=Math.min((now-last)/1000,.05);last=now;t+=dt;draw(dt)}
+addEventListener('resize',build);
+addEventListener('pointermove',e=>{px=e.clientX;py=e.clientY});
+new MutationObserver(theme).observe(root,{attributes:true,attributeFilter:['data-theme']});
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',theme);
+stage=i=>{hl=Math.round(i*(L-1)/4);In.forEach(n=>{n.act=1;n.out.forEach(fire)});if(still)draw(0)};
+theme();build();if(!still)requestAnimationFrame(tick);
+})();
+setLang(lang); go(0);
+</script>
+</body>
+</html>
